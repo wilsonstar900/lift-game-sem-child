@@ -13,11 +13,8 @@
       margin: 0; padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
-
-    /* ─── Root ───────────────────────────────────────────── */
     html, body {
       width: 100%; height: 100%;
-      background: #1a1a2e;
       overflow: hidden;
       touch-action: manipulation;
       font-family: -apple-system, 'PingFang HK', 'Helvetica Neue', Arial, sans-serif;
@@ -27,6 +24,7 @@
       flex-direction: column;
       min-height: 100vh;
       min-height: 100dvh;
+      background: #1a1a2e;
     }
 
     /* ─── Start Screen ───────────────────────────────────── */
@@ -34,471 +32,420 @@
       position: fixed; inset: 0;
       background: linear-gradient(160deg, #0d1b4b 0%, #1a1a2e 60%, #0d2b55 100%);
       z-index: 990;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       gap: 20px;
       transition: opacity 0.45s ease;
     }
     #start-screen.hidden { opacity: 0; pointer-events: none; }
-
     #start-logo {
       font-size: 100px;
-      filter: drop-shadow(0 8px 24px rgba(255,215,0,0.3));
       animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 8px 24px rgba(255,215,0,0.3));
     }
     @keyframes float {
       0%,100% { transform: translateY(0); }
       50%      { transform: translateY(-12px); }
     }
     #start-title {
-      font-size: 52px;
-      font-weight: 900;
+      font-size: 52px; font-weight: 900;
       color: #FFD700;
       text-shadow: 0 3px 16px rgba(255,215,0,0.5);
       letter-spacing: 2px;
     }
-    #start-sub {
-      font-size: 26px;
-      color: #90caf9;
-      font-weight: 600;
-    }
+    #start-sub { font-size: 26px; color: #90caf9; font-weight: 600; }
     #start-btn {
       margin-top: 24px;
       padding: 22px 72px;
-      font-size: 34px;
-      font-weight: 900;
+      font-size: 34px; font-weight: 900;
       background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
-      color: #fff;
-      border: none;
-      border-radius: 70px;
+      color: #fff; border: none; border-radius: 70px;
       cursor: pointer;
-      box-shadow:
-        0 8px 28px rgba(76,175,80,0.55),
-        0 2px 0 rgba(0,0,0,0.2);
-      letter-spacing: 1px;
-      transition: transform 0.1s;
+      box-shadow: 0 8px 28px rgba(76,175,80,0.55), 0 2px 0 rgba(0,0,0,0.2);
       touch-action: manipulation;
+      transition: transform 0.1s;
     }
     #start-btn:active { transform: scale(0.93); }
 
     /* ─── Instruction Bar ────────────────────────────────── */
     #instruction-bar {
       flex-shrink: 0;
-      height: 88px;
+      height: 86px;
       background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
       border-bottom: 3px solid #0a3880;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      padding: 0 18px;
+      display: flex; align-items: center;
+      justify-content: center; gap: 12px;
+      padding: 0 16px;
+      position: relative; z-index: 10;
     }
     #instruction-text {
-      font-size: 30px;
-      font-weight: 900;
-      color: #FFD700;
-      text-align: center;
-      flex: 1;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+      font-size: 28px; font-weight: 900;
+      color: #FFD700; flex: 1; text-align: center;
     }
     #target-floor-badge {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      background: #FFD700;
-      color: #0d47a1;
-      padding: 3px 14px 4px;
-      border-radius: 12px;
-      margin: 0 6px;
-      vertical-align: middle;
-      line-height: 1.15;
-      font-size: 22px;
+      display: inline-flex; flex-direction: column; align-items: center;
+      background: #FFD700; color: #0d47a1;
+      padding: 2px 14px 4px; border-radius: 12px;
+      margin: 0 6px; vertical-align: middle; line-height: 1.2;
     }
-    #target-floor-badge .badge-label { font-size: 20px; font-weight: 900; }
-    #target-floor-badge .badge-zh    { font-size: 14px; font-weight: 800; }
+    #badge-label { font-size: 20px; font-weight: 900; }
+    #badge-zh    { font-size: 13px; font-weight: 800; }
     #replay-btn {
-      flex-shrink: 0;
-      width: 58px; height: 58px;
-      border-radius: 50%;
+      flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%;
       background: rgba(255,255,255,0.14);
       border: 2px solid rgba(255,255,255,0.38);
-      color: #fff;
-      font-size: 26px;
-      cursor: pointer;
+      color: #fff; font-size: 24px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s;
-      touch-action: manipulation;
+      touch-action: manipulation; transition: background 0.15s;
     }
     #replay-btn:active { background: rgba(255,255,255,0.3); }
 
-    /* ─── Game Area ──────────────────────────────────────── */
-    #game-area {
+    /* ═══════════════════════════════════════════════════════
+       ELEVATOR INTERIOR — First-Person View
+    ═══════════════════════════════════════════════════════ */
+    #elevator-interior {
       flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 272px;
-      overflow: hidden;
-      min-height: 0;
+      display: flex; flex-direction: column;
+      overflow: hidden; min-height: 0;
+      position: relative;
     }
 
-    /* ─── Elevator Section ───────────────────────────────── */
-    #elevator-section {
-      display: flex;
-      flex-direction: column;
-      padding: 10px 14px 10px 20px;
-      gap: 10px;
-      overflow: hidden;
+    /* ── Ceiling ──────────────────────────────────────────── */
+    #ceiling {
+      flex-shrink: 0;
+      height: 62px;
+      background: linear-gradient(to bottom,
+        #1c2833 0%, #2c3e50 40%, #495e6f 100%);
+      display: flex; align-items: flex-end;
+      justify-content: center; padding-bottom: 0;
+      position: relative;
+      border-bottom: 3px solid #34495e;
+    }
+    #ceiling-light {
+      width: 55%; height: 18px;
+      background: linear-gradient(to bottom,
+        #fff9e6 0%, #fffde7 60%, #fff8e1 100%);
+      border-radius: 0 0 8px 8px;
+      box-shadow:
+        0 0 40px 14px rgba(255,253,231,0.65),
+        0 0 80px 20px rgba(255,248,225,0.3);
+    }
+    /* Ceiling corner details */
+    #ceiling::before, #ceiling::after {
+      content: '';
+      position: absolute; bottom: 0;
+      width: 18px; height: 100%;
+      background: linear-gradient(to right, #1a2530, #2c3e50);
+    }
+    #ceiling::before { left: 0; }
+    #ceiling::after  { right: 0; transform: scaleX(-1); }
+
+    /* ── Main Interior Area ───────────────────────────────── */
+    #interior-main {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: row;
+      position: relative;
     }
 
-    /* LCD Floor Indicator */
+    /* Left side wall */
+    #wall-left {
+      width: 28px; flex-shrink: 0;
+      background: linear-gradient(to right,
+        #1a2530 0%, #2c3e50 60%, #3d5166 100%);
+      border-right: 2px solid #4a6278;
+    }
+
+    /* ── Door Section (center) ────────────────────────────── */
+    #door-section {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+      background: linear-gradient(to bottom,
+        #3d5166 0%, #4a6278 20%, #3d5166 100%);
+      position: relative;
+    }
+
+    /* Floor indicator above doors */
     #floor-indicator {
       flex-shrink: 0;
-      background: #000;
-      border: 3px solid #37474f;
-      border-radius: 12px;
-      height: 68px;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+      height: 64px;
+      background: linear-gradient(to bottom, #1a2530 0%, #263238 100%);
+      border-bottom: 3px solid #37474f;
+      display: flex; align-items: center;
+      justify-content: center; gap: 16px;
+      box-shadow: inset 0 -4px 12px rgba(0,0,0,0.4);
     }
     #floor-display {
-      font-family: 'Courier New', 'Lucida Console', monospace;
-      font-size: 44px;
-      font-weight: 900;
-      color: #ff8c00;
-      letter-spacing: 3px;
-      min-width: 88px;
-      text-align: center;
-      text-shadow: 0 0 12px rgba(255,140,0,0.8), 0 0 4px rgba(255,140,0,0.5);
+      font-family: 'Courier New', monospace;
+      font-size: 40px; font-weight: 900;
+      color: #ff8c00; letter-spacing: 3px;
+      min-width: 90px; text-align: center;
+      text-shadow: 0 0 14px rgba(255,140,0,0.9), 0 0 4px rgba(255,140,0,0.6);
     }
     #direction-arrow {
-      font-size: 30px;
-      color: #ff8c00;
-      opacity: 0;
-      transition: opacity 0.2s;
+      font-size: 28px; color: #ff8c00;
+      opacity: 0; transition: opacity 0.2s;
       text-shadow: 0 0 10px rgba(255,140,0,0.7);
-      min-width: 32px;
-      text-align: center;
+      min-width: 30px; text-align: center;
     }
     #direction-arrow.vis { opacity: 1; }
 
-    /* Shaft area */
-    #shaft-area {
-      flex: 1;
-      display: flex;
-      align-items: stretch;
-      min-height: 0;
-      gap: 0;
-    }
-
-    /* Floor labels */
-    #floor-labels {
-      width: 64px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column-reverse; /* G/F at bottom */
-      justify-content: space-between;
-      padding: 6px 0;
-    }
-    .floor-lbl {
-      font-size: 13px;
-      font-weight: 700;
-      color: #546e7a;
-      text-align: right;
-      padding-right: 10px;
-      line-height: 1;
-      transition: color 0.25s;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    .floor-lbl.lbl-current { color: #FFD700; font-size: 15px; }
-    .floor-lbl.lbl-target  { color: #69f0ae; }
-
-    /* Building wall (behind shaft) */
-    #building-wrap {
-      flex: 1;
+    /* Door frame (the opening) */
+    #door-frame {
+      flex: 1; min-height: 0;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Shaft */
-    #elevator-shaft {
-      position: relative;
-      width: 170px;
-      height: 100%;
-      background: linear-gradient(to right, #1a2530 0%, #1c2a38 50%, #1a2530 100%);
-      border-left:  7px solid #455a64;
-      border-right: 7px solid #455a64;
-      border-top:   4px solid #37474f;
-      border-bottom: 4px solid #263238;
-      border-radius: 4px;
+      margin: 16px 28px 16px 28px;
+      border-radius: 6px 6px 0 0;
       overflow: hidden;
-      flex-shrink: 0;
+      box-shadow:
+        0 0 0 6px #1c2833,
+        0 0 0 9px #37474f,
+        inset 0 0 20px rgba(0,0,0,0.5);
     }
-    /* Shaft horizontal line markings */
-    #elevator-shaft::before {
-      content: '';
+
+    /* Outside scene (visible behind open doors) */
+    #door-outside {
       position: absolute; inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0, transparent 6px,
-        rgba(255,255,255,0.025) 6px, rgba(255,255,255,0.025) 7px
-      );
-      pointer-events: none;
       z-index: 1;
+      background: linear-gradient(to bottom,
+        #e3f2fd 0%, #bbdefb 40%, #e8eaf6 70%, #c5cae9 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px;
     }
-    /* Left rail */
-    .shaft-rail {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 9px;
-      background: linear-gradient(to right, #37474f, #607d8b, #37474f);
-      border-radius: 5px;
-      pointer-events: none;
-      z-index: 2;
+    #outside-floor-num {
+      font-size: 88px; font-weight: 900;
+      color: #1a237e;
+      text-shadow: 0 4px 16px rgba(26,35,126,0.3);
+      line-height: 1;
     }
-    .shaft-rail.left  { left: 18px; }
-    .shaft-rail.right { right: 18px; }
-
-    /* Elevator Car */
-    #elevator-car {
-      position: absolute;
-      left: 0; right: 0;
-      height: 128px;
-      bottom: 0;
-      z-index: 5;
-      transition: bottom 800ms cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: bottom;
+    #outside-floor-label {
+      font-size: 24px; font-weight: 700;
+      color: #3949ab; letter-spacing: 2px;
     }
-
-    /* Car body */
-    #car-body {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(160deg, #eceff1 0%, #cfd8dc 45%, #b0bec5 100%);
-      border-top: 7px solid #90a4ae;
-    }
-    /* Ceiling strip light */
-    #car-ceiling {
-      position: absolute;
-      top: 9px;
-      left: 28%; right: 28%;
-      height: 6px;
-      background: #fffde7;
-      border-radius: 3px;
-      box-shadow: 0 0 14px 5px rgba(255,253,231,0.55);
-    }
-    /* Passenger */
-    #passenger {
-      position: absolute;
-      bottom: 8px;
-      left: 50%; transform: translateX(-50%);
-      font-size: 40px;
-      user-select: none;
-      -webkit-user-select: none;
-      z-index: 8;
+    /* Corridor lines */
+    #door-outside::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 30%;
+      background: linear-gradient(to bottom,
+        transparent, rgba(26,35,126,0.08));
     }
 
-    /* Doors */
+    /* Elevator doors */
     #door-left, #door-right {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 50%;
-      z-index: 10;
-      background: linear-gradient(
-        90deg,
-        #607d8b 0%, #90a4ae 20%, #cfd8dc 50%, #90a4ae 80%, #607d8b 100%
-      );
-      transition: transform 0.52s ease-in-out;
+      position: absolute; top: 0; bottom: 0;
+      width: 50%; z-index: 10;
+      background: linear-gradient(90deg,
+        #546e7a 0%, #78909c 15%,
+        #b0bec5 35%, #cfd8dc 50%,
+        #b0bec5 65%, #78909c 85%,
+        #546e7a 100%);
+      transition: transform 0.65s ease-in-out;
       will-change: transform;
     }
-    #door-left  {
-      left: 0;
-      transform-origin: left center;
-      border-right: 2px solid #546e7a;
-    }
-    #door-right {
-      right: 0;
-      transform-origin: right center;
-      border-left: 2px solid #546e7a;
-    }
+    #door-left  { left: 0;  border-right: 3px solid #37474f; }
+    #door-right { right: 0; border-left:  3px solid #37474f; }
     /* Door handle */
     #door-left::after {
       content: '';
       position: absolute;
-      right: 9px; top: 50%; transform: translateY(-50%);
-      width: 5px; height: 26px;
-      background: #37474f;
+      right: 10px; top: 50%; transform: translateY(-50%);
+      width: 5px; height: 32px;
+      background: linear-gradient(to right, #37474f, #607d8b, #37474f);
       border-radius: 3px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
     #door-right::after {
       content: '';
       position: absolute;
-      left: 9px; top: 50%; transform: translateY(-50%);
-      width: 5px; height: 26px;
-      background: #37474f;
+      left: 10px; top: 50%; transform: translateY(-50%);
+      width: 5px; height: 32px;
+      background: linear-gradient(to right, #37474f, #607d8b, #37474f);
       border-radius: 3px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
-    /* Open state */
-    #elevator-car.doors-open #door-left  { transform: scaleX(0); }
-    #elevator-car.doors-open #door-right { transform: scaleX(0); }
+    /* Door horizontal lines (panel detail) */
+    #door-left::before, #door-right::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0, transparent 48px,
+        rgba(0,0,0,0.07) 48px, rgba(0,0,0,0.07) 50px
+      );
+    }
+    /* Open state — slide out of frame */
+    #door-frame.doors-open #door-left  { transform: translateX(-100%); }
+    #door-frame.doors-open #door-right { transform: translateX(100%); }
 
-    /* ─── Button Panel ───────────────────────────────────── */
-    #button-panel {
-      background: linear-gradient(180deg, #2d3e50 0%, #1c2a38 100%);
-      border-left: 4px solid #37474f;
-      display: flex;
-      flex-direction: column;
-      padding: 14px 10px 10px;
-      gap: 8px;
-      overflow: hidden;
+    /* Right side wall */
+    #wall-right {
+      width: 28px; flex-shrink: 0;
+      background: linear-gradient(to left,
+        #1a2530 0%, #2c3e50 60%, #3d5166 100%);
+      border-left: 2px solid #4a6278;
     }
-    #panel-title {
-      flex-shrink: 0;
+
+    /* ── Button Panel (right wall embedded) ───────────────── */
+    #panel-section {
+      width: 250px; flex-shrink: 0;
+      background: linear-gradient(to left,
+        #1a2530 0%, #2c3e50 15%, #2d3e50 100%);
+      border-left: 3px solid #37474f;
+      display: flex; flex-direction: column;
+      padding: 10px 10px 10px 12px;
+      gap: 8px; overflow: hidden;
+    }
+
+    /* Panel bezel */
+    #panel-bezel {
+      flex: 1; min-height: 0;
+      background: linear-gradient(160deg, #263238 0%, #1c2833 100%);
+      border: 3px solid #455a64;
+      border-radius: 14px;
+      padding: 12px 10px 10px;
+      display: flex; flex-direction: column;
+      gap: 8px;
+      box-shadow:
+        inset 0 2px 8px rgba(0,0,0,0.6),
+        0 2px 6px rgba(0,0,0,0.4);
+    }
+    #panel-label {
       text-align: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: #78909c;
-      letter-spacing: 2px;
+      font-size: 11px; font-weight: 700;
+      color: #546e7a; letter-spacing: 2px;
       text-transform: uppercase;
     }
 
-    /* Button grid — 2 cols, fills remaining height */
+    /* Floor Buttons — numbers only */
     #floor-buttons {
-      flex: 1;
+      flex: 1; min-height: 0;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 9px;
+      gap: 8px;
       align-content: space-between;
-      min-height: 0;
     }
     .floor-btn {
       aspect-ratio: 1;
       border-radius: 50%;
       background: radial-gradient(
-        circle at 36% 32%,
-        #f5f5f5 0%, #d5d5d5 52%, #9e9e9e 100%
+        circle at 38% 34%,
+        #f0f0f0 0%, #d0d0d0 50%, #8a8a8a 100%
       );
-      border: 3px solid #757575;
+      border: 3px solid #616161;
       box-shadow:
-        3px 3px 9px rgba(0,0,0,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.55);
+        3px 3px 10px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.6),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      transition: transform 0.1s, box-shadow 0.1s;
-      touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    .floor-btn:active {
-      transform: scale(0.88);
-      box-shadow: 1px 1px 4px rgba(0,0,0,0.5),
-        inset 0 2px 5px rgba(0,0,0,0.28);
-    }
-    .btn-label {
-      font-size: 15px;
-      font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900;
       color: #1a1a1a;
       line-height: 1;
-      letter-spacing: 0.5px;
+      letter-spacing: 0;
+      transition: transform 0.1s, box-shadow 0.1s;
+      touch-action: manipulation;
+      user-select: none; -webkit-user-select: none;
     }
-    .btn-zh {
-      font-size: 12px;
-      font-weight: 700;
-      color: #424242;
-      line-height: 1;
-    }
+    /* G button slightly different to stand out */
+    .floor-btn[data-id="G"] { font-size: 26px; color: #0d47a1; }
 
-    /* Button states */
+    .floor-btn:active {
+      transform: scale(0.88);
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.6),
+        inset 0 3px 6px rgba(0,0,0,0.35);
+    }
+    /* Lit (after pressing correct) */
     .floor-btn.lit {
       background: radial-gradient(
-        circle at 36% 32%,
-        #fff9e0 0%, #ffd54f 52%, #ff8f00 100%
+        circle at 38% 34%,
+        #fff9e0 0%, #ffd54f 50%, #ff8f00 100%
       );
       border-color: #ff8f00;
       box-shadow:
-        0 0 16px rgba(255,143,0,0.85),
-        3px 3px 9px rgba(0,0,0,0.4);
+        0 0 18px rgba(255,143,0,0.9),
+        3px 3px 10px rgba(0,0,0,0.5);
+      color: #4a2600;
     }
+    /* Hint (wrong × 2) */
     .floor-btn.hint {
       animation: hint-pulse 0.45s ease-in-out infinite alternate;
     }
     @keyframes hint-pulse {
       from {
-        background: radial-gradient(circle at 36% 32%, #e8f5e9 0%, #66bb6a 52%, #2e7d32 100%);
+        background: radial-gradient(circle at 38% 34%,
+          #e8f5e9 0%, #66bb6a 50%, #2e7d32 100%);
         border-color: #4caf50;
-        box-shadow: 0 0 10px rgba(76,175,80,0.5), 3px 3px 9px rgba(0,0,0,0.4);
+        box-shadow: 0 0 10px rgba(76,175,80,0.5),
+          3px 3px 10px rgba(0,0,0,0.5);
       }
       to {
-        background: radial-gradient(circle at 36% 32%, #f1f8e9 0%, #9ccc65 52%, #558b2f 100%);
+        background: radial-gradient(circle at 38% 34%,
+          #f1f8e9 0%, #9ccc65 50%, #558b2f 100%);
         border-color: #8bc34a;
-        box-shadow: 0 0 26px rgba(76,175,80,0.95), 3px 3px 9px rgba(0,0,0,0.4);
+        box-shadow: 0 0 28px rgba(76,175,80,0.95),
+          3px 3px 10px rgba(0,0,0,0.5);
       }
     }
-    .floor-btn.disabled {
-      pointer-events: none;
-      opacity: 0.45;
-    }
+    .floor-btn.disabled { pointer-events: none; opacity: 0.45; }
 
-    /* Decorative door control buttons */
-    #door-buttons {
+    /* Door control buttons (decorative) */
+    #door-ctrls {
       flex-shrink: 0;
-      display: flex;
-      gap: 8px;
+      display: flex; gap: 6px;
     }
     .door-ctrl {
-      flex: 1;
-      height: 44px;
-      background: #37474f;
-      border: 2px solid #546e7a;
-      border-radius: 10px;
-      color: #78909c;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s;
-      touch-action: manipulation;
-      flex-direction: column;
-      gap: 1px;
+      flex: 1; height: 40px;
+      background: #37474f; border: 2px solid #546e7a;
+      border-radius: 8px; color: #78909c;
+      font-size: 14px; cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1px;
+      touch-action: manipulation; transition: background 0.15s;
     }
     .door-ctrl:active { background: #455a64; }
-    .door-ctrl span { font-size: 9px; color: #546e7a; font-weight: 600; }
+    .door-ctrl span { font-size: 8px; color: #4a6278; font-weight: 700; letter-spacing: 1px; }
+
+    /* ── Floor Strip ──────────────────────────────────────── */
+    #floor-strip {
+      flex-shrink: 0;
+      height: 64px;
+      background: linear-gradient(to bottom,
+        #3d5166 0%, #2c3e50 30%, #1c2833 100%);
+      border-top: 3px solid #37474f;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Floor tile lines */
+    #floor-strip::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0, transparent 80px,
+        rgba(255,255,255,0.04) 80px, rgba(255,255,255,0.04) 82px
+      );
+    }
+    /* Floor edge highlight */
+    #floor-strip::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to right,
+        transparent, rgba(255,255,255,0.15), transparent);
+    }
 
     /* ─── Celebration Overlay ────────────────────────────── */
     #celebration-overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.52);
-      z-index: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.28s;
+      background: rgba(0,0,0,0.55); z-index: 800;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.28s;
     }
-    #celebration-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    #celebration-overlay.show { opacity: 1; pointer-events: auto; }
     #celebration-card {
-      background: #fff;
-      border-radius: 30px;
-      padding: 38px 56px;
-      text-align: center;
+      background: #fff; border-radius: 30px;
+      padding: 40px 56px; text-align: center;
       border: 7px solid #FFD700;
       box-shadow: 0 24px 64px rgba(0,0,0,0.45);
       transform: scale(0);
@@ -516,14 +463,12 @@
 
     /* ─── Confetti ───────────────────────────────────────── */
     .confetti {
-      position: fixed;
-      border-radius: 2px;
-      pointer-events: none;
-      z-index: 790;
-      animation: cf-fall var(--dur, 2s) ease-in var(--delay, 0s) forwards;
+      position: fixed; border-radius: 2px;
+      pointer-events: none; z-index: 790;
+      animation: cf-fall var(--dur,2s) ease-in var(--delay,0s) forwards;
     }
     @keyframes cf-fall {
-      0%   { transform: translateY(-20px) translateX(0) rotate(0deg);   opacity: 1; }
+      0%   { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 1; }
       100% { transform: translateY(110vh) translateX(var(--drift,0px)) rotate(720deg); opacity: 0; }
     }
   </style>
@@ -547,62 +492,67 @@
         <span class="badge-zh"    id="badge-zh">?</span>
       </span>
     </div>
-    <button id="replay-btn" aria-label="重播指示">🔊</button>
+    <button id="replay-btn" aria-label="重播">🔊</button>
   </div>
 
-  <!-- ─── Game Area ─────────────────────────────────────────── -->
-  <div id="game-area">
+  <!-- ═══ ELEVATOR INTERIOR (first-person view) ═══ -->
+  <div id="elevator-interior">
 
-    <!-- Left: Elevator -->
-    <section id="elevator-section">
+    <!-- Ceiling with light -->
+    <div id="ceiling">
+      <div id="ceiling-light"></div>
+    </div>
 
-      <!-- LCD Indicator -->
-      <div id="floor-indicator">
-        <div id="floor-display">G/F</div>
-        <div id="direction-arrow">▲</div>
-      </div>
+    <!-- Main interior: side walls + doors + button panel -->
+    <div id="interior-main">
 
-      <!-- Shaft + Labels -->
-      <div id="shaft-area">
-        <div id="floor-labels">
-          <!-- Populated by JS: FLOORS appended (G/F first = bottom in column-reverse) -->
+      <!-- Left wall strip -->
+      <div id="wall-left"></div>
+
+      <!-- Center: floor indicator + doors -->
+      <div id="door-section">
+
+        <!-- LCD indicator above doors -->
+        <div id="floor-indicator">
+          <div id="floor-display">G/F</div>
+          <div id="direction-arrow">▲</div>
         </div>
 
-        <div id="building-wrap">
-          <div id="elevator-shaft">
-            <div class="shaft-rail left"></div>
-            <div class="shaft-rail right"></div>
+        <!-- Door frame (with outside scene behind) -->
+        <div id="door-frame">
+          <!-- Outside corridor (revealed when doors open) -->
+          <div id="door-outside">
+            <div id="outside-floor-num">G</div>
+            <div id="outside-floor-label">地下</div>
+          </div>
+          <!-- The two doors -->
+          <div id="door-left"></div>
+          <div id="door-right"></div>
+        </div>
 
-            <!-- Elevator Car -->
-            <div id="elevator-car">
-              <div id="car-body">
-                <div id="car-ceiling"></div>
-                <div id="passenger">🧒</div>
-              </div>
-              <div id="door-left"></div>
-              <div id="door-right"></div>
-            </div>
+      </div>
+
+      <!-- Right wall strip -->
+      <div id="wall-right"></div>
+
+      <!-- Button panel (right side) -->
+      <div id="panel-section">
+        <div id="panel-bezel">
+          <div id="panel-label">選樓層</div>
+          <div id="floor-buttons">
+            <!-- Populated by JS — numbers only -->
+          </div>
+          <div id="door-ctrls">
+            <button class="door-ctrl" tabindex="-1">◁▷<span>開門</span></button>
+            <button class="door-ctrl" tabindex="-1">▷◁<span>關門</span></button>
           </div>
         </div>
       </div>
 
-    </section>
+    </div>
 
-    <!-- Right: Button Panel -->
-    <section id="button-panel">
-      <div id="panel-title">選樓層</div>
-      <div id="floor-buttons">
-        <!-- Populated by JS -->
-      </div>
-      <div id="door-buttons">
-        <button class="door-ctrl" tabindex="-1">
-          ◁▷<span>開門</span>
-        </button>
-        <button class="door-ctrl" tabindex="-1">
-          ▷◁<span>關門</span>
-        </button>
-      </div>
-    </section>
+    <!-- Floor strip -->
+    <div id="floor-strip"></div>
 
   </div>
 
@@ -617,165 +567,124 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   FLOOR DATA  ─ Hong Kong format, no 4/F
+   FLOOR DATA — Hong Kong format, no 4/F
+   btnNum = what appears on the button (number only)
 ═══════════════════════════════════════════════════════ */
 const FLOORS = [
-  { id: 'G',  label: 'G/F',  display: '地下', speech: '地下',  position: 0 },
-  { id: '1',  label: '1/F',  display: '一樓', speech: '一樓',  position: 1 },
-  { id: '2',  label: '2/F',  display: '二樓', speech: '二樓',  position: 2 },
-  { id: '3',  label: '3/F',  display: '三樓', speech: '三樓',  position: 3 },
-  { id: '5',  label: '5/F',  display: '五樓', speech: '五樓',  position: 4 },
-  { id: '6',  label: '6/F',  display: '六樓', speech: '六樓',  position: 5 },
-  { id: '7',  label: '7/F',  display: '七樓', speech: '七樓',  position: 6 },
-  { id: '8',  label: '8/F',  display: '八樓', speech: '八樓',  position: 7 },
-  { id: '9',  label: '9/F',  display: '九樓', speech: '九樓',  position: 8 },
-  { id: '10', label: '10/F', display: '十樓', speech: '十樓',  position: 9 },
+  { id: 'G',  label: 'G/F',  btnNum: 'G',  display: '地下', speech: '地下',  position: 0 },
+  { id: '1',  label: '1/F',  btnNum: '1',  display: '一樓', speech: '一樓',  position: 1 },
+  { id: '2',  label: '2/F',  btnNum: '2',  display: '二樓', speech: '二樓',  position: 2 },
+  { id: '3',  label: '3/F',  btnNum: '3',  display: '三樓', speech: '三樓',  position: 3 },
+  { id: '5',  label: '5/F',  btnNum: '5',  display: '五樓', speech: '五樓',  position: 4 },
+  { id: '6',  label: '6/F',  btnNum: '6',  display: '六樓', speech: '六樓',  position: 5 },
+  { id: '7',  label: '7/F',  btnNum: '7',  display: '七樓', speech: '七樓',  position: 6 },
+  { id: '8',  label: '8/F',  btnNum: '8',  display: '八樓', speech: '八樓',  position: 7 },
+  { id: '9',  label: '9/F',  btnNum: '9',  display: '九樓', speech: '九樓',  position: 8 },
+  { id: '10', label: '10/F', btnNum: '10', display: '十樓', speech: '十樓',  position: 9 },
 ];
 
 /* ═══════════════════════════════════════════════════════
    GAME STATE
 ═══════════════════════════════════════════════════════ */
 const S = {
-  IDLE: 'idle', ANNOUNCING: 'announcing', WAITING: 'waiting',
-  MOVING: 'moving', DOOR_OPEN: 'door_open',
-  CELEBRATING: 'celebrating', HINT: 'hint',
+  IDLE:'idle', ANNOUNCING:'announcing', WAITING:'waiting',
+  MOVING:'moving', DOOR_OPEN:'door_open',
+  CELEBRATING:'celebrating', HINT:'hint',
 };
-let state        = S.IDLE;
-let curFloor     = FLOORS[0];   // start at G/F
-let targetFloor  = null;
-let wrongCount   = 0;
-let hintTimer    = null;
+let state       = S.IDLE;
+let curFloor    = FLOORS[0];
+let targetFloor = null;
+let wrongCount  = 0;
+let hintTimer   = null;
 
 /* ═══════════════════════════════════════════════════════
    DOM
 ═══════════════════════════════════════════════════════ */
-const $display   = document.getElementById('floor-display');
-const $arrow     = document.getElementById('direction-arrow');
-const $labels    = document.getElementById('floor-labels');
-const $buttons   = document.getElementById('floor-buttons');
-const $car       = document.getElementById('elevator-car');
-const $shaft     = document.getElementById('elevator-shaft');
-const $celOv     = document.getElementById('celebration-overlay');
-const $celSub    = document.getElementById('cel-sub');
-const $celEmoji  = document.getElementById('cel-emoji');
-const $badgeLbl  = document.getElementById('badge-label');
-const $badgeZh   = document.getElementById('badge-zh');
-const $replay    = document.getElementById('replay-btn');
-const $startScr  = document.getElementById('start-screen');
-const $startBtn  = document.getElementById('start-btn');
+const $display     = document.getElementById('floor-display');
+const $arrow       = document.getElementById('direction-arrow');
+const $doorFrame   = document.getElementById('door-frame');
+const $buttons     = document.getElementById('floor-buttons');
+const $celOv       = document.getElementById('celebration-overlay');
+const $celSub      = document.getElementById('cel-sub');
+const $celEmoji    = document.getElementById('cel-emoji');
+const $badgeLbl    = document.getElementById('badge-label');
+const $badgeZh     = document.getElementById('badge-zh');
+const $replay      = document.getElementById('replay-btn');
+const $startScr    = document.getElementById('start-screen');
+const $startBtn    = document.getElementById('start-btn');
+const $outsideNum  = document.getElementById('outside-floor-num');
+const $outsideLbl  = document.getElementById('outside-floor-label');
 
 /* ═══════════════════════════════════════════════════════
-   TTS — Cantonese (zh-HK)
-   iOS Safari: cancel() first, then 110ms delay
+   TTS — Cantonese zh-HK
 ═══════════════════════════════════════════════════════ */
 function speak(text, onEnd) {
   if (!window.speechSynthesis) { onEnd?.(); return; }
   speechSynthesis.cancel();
   setTimeout(() => {
     const utt = new SpeechSynthesisUtterance(text);
-    utt.lang  = 'zh-HK';
-    utt.rate  = 0.78;     // slightly slow — SEM-friendly
-    utt.pitch = 1.05;
-    utt.volume = 1;
+    utt.lang = 'zh-HK'; utt.rate = 0.80; utt.pitch = 1.05; utt.volume = 1;
     if (onEnd) utt.onend = () => onEnd();
     speechSynthesis.speak(utt);
   }, 110);
 }
 
 /* ═══════════════════════════════════════════════════════
-   ELEVATOR POSITION
-═══════════════════════════════════════════════════════ */
-function carBottom(pos) {
-  const shaftH = $shaft.clientHeight;
-  const carH   = $car.clientHeight;
-  const span   = Math.max(1, shaftH - carH);
-  return Math.round(pos * span / (FLOORS.length - 1));
-}
-
-function snapCar(floor, animated) {
-  if (!animated) {
-    $car.style.transition = 'none';
-    $car.style.bottom = carBottom(floor.position) + 'px';
-    void $car.offsetWidth;                 // force reflow
-    $car.style.transition = '';
-  } else {
-    $car.style.bottom = carBottom(floor.position) + 'px';
-  }
-}
-
-/* ═══════════════════════════════════════════════════════
    LCD INDICATOR
 ═══════════════════════════════════════════════════════ */
 function setDisplay(label) { $display.textContent = label; }
-function setArrow(dir) {   // 'up' | 'down' | 'none'
-  if (dir === 'none') {
-    $arrow.classList.remove('vis');
-  } else {
-    $arrow.textContent = dir === 'up' ? '▲' : '▼';
-    $arrow.classList.add('vis');
-  }
+function setArrow(dir) {
+  if (dir === 'none') { $arrow.classList.remove('vis'); return; }
+  $arrow.textContent = dir === 'up' ? '▲' : '▼';
+  $arrow.classList.add('vis');
+}
+
+/* Outside scene update */
+function setOutsideScene(floor) {
+  $outsideNum.textContent = floor.btnNum;
+  $outsideLbl.textContent = floor.display;
 }
 
 /* ═══════════════════════════════════════════════════════
-   FLOOR LABELS
-═══════════════════════════════════════════════════════ */
-function buildLabels() {
-  FLOORS.forEach(f => {
-    const el = document.createElement('div');
-    el.className = 'floor-lbl';
-    el.dataset.id = f.id;
-    el.textContent = f.label;
-    $labels.appendChild(el);   // column-reverse → G/F lands at bottom
-  });
-}
-
-function refreshLabels() {
-  document.querySelectorAll('.floor-lbl').forEach(el => {
-    el.classList.remove('lbl-current', 'lbl-target');
-    if (el.dataset.id === curFloor.id)    el.classList.add('lbl-current');
-    if (targetFloor && el.dataset.id === targetFloor.id) el.classList.add('lbl-target');
-  });
-}
-
-/* ═══════════════════════════════════════════════════════
-   MOVE ELEVATOR
+   ELEVATOR ANIMATION
+   — In first-person, we animate the LCD + arrow + door
+   — No shaft car movement needed (we're inside!)
 ═══════════════════════════════════════════════════════ */
 function moveElevator(toFloor, done) {
   state = S.MOVING;
   const fromPos = curFloor.position;
   const toPos   = toFloor.position;
   const steps   = Math.abs(toPos - fromPos);
-  const dur     = Math.max(850, steps * 360);   // ms
+  const dur     = Math.max(900, steps * 380);
 
-  // ── Elevator direction announcement ──
-  speak(toPos > fromPos ? '上緊' : '落緊');
-
+  // ── Going up / going down announcement ──
+  speak(toPos > fromPos ? '往上' : '往下');
   setArrow(toPos > fromPos ? 'up' : 'down');
 
-  // Set CSS transition duration
-  $car.style.transition = `bottom ${dur}ms cubic-bezier(0.4,0,0.2,1)`;
-  snapCar(toFloor, true);
-
-  // Roll LCD display through floors during travel
+  // Roll LCD through floors
   rollDisplay(fromPos, toPos, dur);
 
+  // Simulate travel vibration on interior (optional CSS class)
+  document.getElementById('elevator-interior').classList.add('moving');
+
   setTimeout(() => {
+    document.getElementById('elevator-interior').classList.remove('moving');
     curFloor = toFloor;
     setArrow('none');
-    refreshLabels();
+    setOutsideScene(toFloor);
     done?.();
   }, dur);
 }
 
 function rollDisplay(from, to, totalMs) {
   if (from === to) return;
-  const dir   = from < to ? 1 : -1;
+  const dir = from < to ? 1 : -1;
   const steps = Math.abs(to - from);
-  const ms    = totalMs / steps;
+  const ms = totalMs / steps;
   let i = 1;
   const iv = setInterval(() => {
     const pos = from + dir * i;
-    const f   = FLOORS.find(x => x.position === pos);
+    const f = FLOORS.find(x => x.position === pos);
     if (f) setDisplay(f.label);
     i++;
     if (i > steps) clearInterval(iv);
@@ -787,40 +696,38 @@ function rollDisplay(from, to, totalMs) {
 ═══════════════════════════════════════════════════════ */
 function openDoors(done) {
   state = S.DOOR_OPEN;
-  $car.classList.add('doors-open');
-  speak('門開喇');                       // ── Door open announcement
-  setTimeout(() => done?.(), 560);
+  speak('升降機門開啟');                    // ── Door open announcement
+  $doorFrame.classList.add('doors-open');
+  setTimeout(() => done?.(), 680);
 }
+
 function closeDoors(done) {
-  $car.classList.remove('doors-open');
-  speak('門關喇');                       // ── Door closing announcement
-  setTimeout(() => done?.(), 560);
+  speak('升降機門關閉');                    // ── Door closing announcement
+  $doorFrame.classList.remove('doors-open');
+  setTimeout(() => done?.(), 680);
 }
 
 /* ═══════════════════════════════════════════════════════
-   FLOOR BUTTONS
+   FLOOR BUTTONS — numbers only
 ═══════════════════════════════════════════════════════ */
 function buildButtons() {
-  // Panel: 10/F at top → G/F at bottom
   [...FLOORS].reverse().forEach(f => {
     const btn = document.createElement('button');
     btn.className = 'floor-btn';
     btn.dataset.id = f.id;
-    btn.innerHTML =
-      `<span class="btn-label">${f.label}</span>` +
-      `<span class="btn-zh">${f.display}</span>`;
+    btn.textContent = f.btnNum;          // ← NUMBER ONLY
     btn.addEventListener('click', () => onFloorBtn(f));
     $buttons.appendChild(btn);
   });
 }
 
 function setButtonsDisabled(yes) {
-  document.querySelectorAll('.floor-btn').forEach(b => b.classList.toggle('disabled', yes));
+  document.querySelectorAll('.floor-btn')
+    .forEach(b => b.classList.toggle('disabled', yes));
 }
 function resetButtons() {
-  document.querySelectorAll('.floor-btn').forEach(b =>
-    b.classList.remove('lit', 'hint', 'disabled')
-  );
+  document.querySelectorAll('.floor-btn')
+    .forEach(b => b.classList.remove('lit', 'hint', 'disabled'));
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -837,7 +744,7 @@ function showHint() {
 /* ═══════════════════════════════════════════════════════
    CELEBRATE
 ═══════════════════════════════════════════════════════ */
-const EMOJIS   = ['🎉','🎊','⭐','🌟','🏆','🎈','✨','🥳'];
+const EMOJIS    = ['🎉','🎊','⭐','🌟','🏆','🎈','✨','🥳'];
 const CF_COLORS = [
   '#FFD700','#FF6B6B','#4ECDC4','#45B7D1',
   '#96CEB4','#FFEAA7','#ff8c00','#e91e63','#7c4dff'
@@ -845,38 +752,32 @@ const CF_COLORS = [
 
 function celebrate(floor) {
   state = S.CELEBRATING;
-  fireConfetti(32);
-
+  fireConfetti(30);
   $celEmoji.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
   $celSub.textContent   = `去${floor.display}！`;
   $celOv.classList.add('show');
-
   speak(`答啱喇！去${floor.speech}！`);
 
   setTimeout(() => {
     $celOv.classList.remove('show');
     clearConfetti();
-    closeDoors(() => {
-      setTimeout(() => startRound(), 900);  // wait for 門關喇 to finish
-    });
+    closeDoors(() => setTimeout(() => startRound(), 900));
   }, 2700);
 }
 
 function fireConfetti(n) {
   for (let i = 0; i < n; i++) {
-    const el    = document.createElement('div');
-    const size  = 8 + Math.random() * 10;
-    const drift = (Math.random() - 0.5) * 260;
+    const el   = document.createElement('div');
+    const size = 8 + Math.random() * 10;
     el.className = 'confetti';
     el.style.cssText = [
       `width:${size}px`, `height:${size}px`,
-      `left:${Math.random() * 100}vw`,
-      `top:-20px`,
+      `left:${Math.random() * 100}vw`, `top:-20px`,
       `background:${CF_COLORS[Math.floor(Math.random() * CF_COLORS.length)]}`,
       `border-radius:${Math.random() > 0.45 ? '50%' : '2px'}`,
       `--dur:${1.4 + Math.random() * 1.0}s`,
       `--delay:${Math.random() * 0.65}s`,
-      `--drift:${drift}px`,
+      `--drift:${(Math.random() - 0.5) * 260}px`,
     ].join(';');
     document.body.appendChild(el);
   }
@@ -890,7 +791,7 @@ function clearConfetti() {
 ═══════════════════════════════════════════════════════ */
 function onFloorBtn(floor) {
   if (state !== S.WAITING) return;
-  if (floor.id === curFloor.id) return;   // already here
+  if (floor.id === curFloor.id) return;
 
   const btn = document.querySelector(`.floor-btn[data-id="${floor.id}"]`);
 
@@ -899,7 +800,7 @@ function onFloorBtn(floor) {
     btn.classList.add('lit');
     setButtonsDisabled(true);
     moveElevator(targetFloor, () => {
-      // ── Arrival announcement → then open doors
+      // Arrival → announce → open doors → celebrate
       speak(`到達${targetFloor.speech}`, () => {
         openDoors(() => celebrate(targetFloor));
       });
@@ -909,10 +810,8 @@ function onFloorBtn(floor) {
     state = S.HINT;
     wrongCount++;
     btn.classList.add('lit');
-
     const msg = wrongCount === 1 ? '唔係呀，再試下' : '唔係呀，試下另一個';
     speak(msg);
-
     setTimeout(() => {
       btn.classList.remove('lit');
       if (wrongCount >= 2) showHint();
@@ -929,45 +828,40 @@ function startRound() {
   wrongCount = 0;
   clearTimeout(hintTimer);
 
-  // Pick a different floor each time
   let pick;
   do { pick = FLOORS[Math.floor(Math.random() * FLOORS.length)]; }
   while (pick.id === curFloor.id);
   targetFloor = pick;
 
-  // Update instruction badge
   $badgeLbl.textContent = targetFloor.label;
   $badgeZh.textContent  = targetFloor.display;
 
   resetButtons();
-  refreshLabels();
 
-  speak(`請去${targetFloor.speech}`, () => {
-    state = S.WAITING;
-  });
+  speak(`請去${targetFloor.speech}`, () => { state = S.WAITING; });
 }
 
 /* ═══════════════════════════════════════════════════════
-   REPLAY BUTTON
+   REPLAY
 ═══════════════════════════════════════════════════════ */
 $replay.addEventListener('click', () => {
-  if (state === S.WAITING || state === S.HINT) {
+  if (state === S.WAITING || state === S.HINT)
     speak(`請去${targetFloor.speech}`);
-  }
 });
 
 /* ═══════════════════════════════════════════════════════
-   START BUTTON — triggers iOS audio unlock
+   START
 ═══════════════════════════════════════════════════════ */
 $startBtn.addEventListener('click', () => {
-  // Silent utterance unlocks iOS WebAudio
-  const unlock = new SpeechSynthesisUtterance(' ');
+  const unlock = new SpeechSynthesisUtterance(' ');
   unlock.volume = 0;
   speechSynthesis.speak(unlock);
 
   $startScr.classList.add('hidden');
   setTimeout(() => {
     $startScr.style.display = 'none';
+    // Initialise outside scene
+    setOutsideScene(curFloor);
     startRound();
   }, 440);
 });
@@ -976,15 +870,9 @@ $startBtn.addEventListener('click', () => {
    INIT
 ═══════════════════════════════════════════════════════ */
 function init() {
-  buildLabels();
   buildButtons();
-
-  // Wait for layout before measuring shaft height
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    snapCar(curFloor, false);
-    setDisplay(curFloor.label);
-    refreshLabels();
-  }));
+  setDisplay(curFloor.label);
+  setOutsideScene(curFloor);
 }
 
 init();
