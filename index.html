@@ -744,45 +744,48 @@ function startAutoCloseCountdown() {
   }, 50);
 
   doorAutoTimer = setTimeout(() => {
-    if (waitingForClose) closeDoors(afterCloseFn);
+    if (doorSt === 'open' || doorSt === 'opening') {
+      closeDoors(waitingForClose ? afterCloseFn : null);
+    }
   }, AUTO_CLOSE_MS);
 }
 
 /* Visual state for door buttons */
 function updateDoorBtnState() {
   const isOpen = doorSt === 'open' || doorSt === 'opening';
-  $btnDoorOpen.classList.toggle('door-active', isOpen && waitingForClose);
+  $btnDoorOpen.classList.toggle('door-active', isOpen);
 }
 
 /* ── Door Open button ── */
+// Works any time the lift is not moving
 $btnDoorOpen.addEventListener('click', () => {
-  if (!waitingForClose) return;
+  if (state === S.MOVING || state === S.IDLE || state === S.ANNOUNCING) return;
 
   if (doorSt === 'closed' || doorSt === 'closing') {
-    // Re-open the doors and restart auto-close
-    speak('升降機門開啟');
-    $doorFrame.classList.add('doors-open');
-    doorSt = 'opening';
+    // (Re-)open and start 3-sec auto-close
     clearTimeout(doorAutoTimer);
     clearInterval(acInterval);
     $acFill.style.width = '0%';
+    speak('升降機門開啟');
+    $doorFrame.classList.add('doors-open');
+    doorSt = 'opening';
     setTimeout(() => {
       doorSt = 'open';
       updateDoorBtnState();
-      startAutoCloseCountdown();  // restart 3-sec
+      startAutoCloseCountdown();
     }, 680);
   } else {
-    // Already open — just restart the countdown
+    // Already open — restart the 3-sec countdown
     startAutoCloseCountdown();
   }
 });
 
 /* ── Door Close button ── */
+// Works any time the lift is not moving and doors are open
 $btnDoorClose.addEventListener('click', () => {
-  if (!waitingForClose) return;
+  if (state === S.MOVING || state === S.IDLE || state === S.ANNOUNCING) return;
   if (doorSt === 'closed' || doorSt === 'closing') return;
-  const cb = afterCloseFn;
-  closeDoors(cb);
+  closeDoors(waitingForClose ? afterCloseFn : null);
 });
 
 /* ══════════════════════════════════════════
