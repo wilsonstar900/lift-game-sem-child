@@ -317,24 +317,57 @@
     }
     .floor-btn.disabled { pointer-events: none; opacity: .45; }
 
-    /* Door control buttons — FUNCTIONAL */
-    #door-ctrls { flex-shrink: 0; display: flex; gap: 8px; }
+    /* Door control buttons — circular, same style as floor buttons */
+    #door-ctrls { flex-shrink: 0; display: flex; gap: 10px; }
     .door-ctrl {
-      flex: 1; height: 46px;
-      background: #37474f; border: 2px solid #546e7a;
-      border-radius: 10px; color: #cfd8dc;
-      font-size: 18px; cursor: pointer;
+      flex: 1; aspect-ratio: 1; border-radius: 50%;
+      border: 3px solid #616161;
+      box-shadow: 3px 3px 10px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.2);
+      cursor: pointer;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 1px;
-      touch-action: manipulation; transition: background .15s, border-color .15s, color .15s;
+      align-items: center; justify-content: center; gap: 2px;
+      font-size: 20px; font-weight: 900;
+      touch-action: manipulation;
+      transition: transform .1s, box-shadow .1s;
+      user-select: none; -webkit-user-select: none;
     }
-    .door-ctrl span { font-size: 9px; color: #90a4ae; font-weight: 700; letter-spacing: 1px; transition: color .15s; }
-    .door-ctrl:active { background: #546e7a; }
-    /* Active/lit state for open button when doors are open */
-    .door-ctrl.door-active {
-      background: #0d47a1; border-color: #42a5f5; color: #fff;
+    .door-ctrl span { font-size: 9px; font-weight: 700; letter-spacing: 1px; line-height: 1; }
+    .door-ctrl:active {
+      transform: scale(.88);
+      box-shadow: 1px 1px 4px rgba(0,0,0,.6), inset 0 3px 6px rgba(0,0,0,.35);
     }
-    .door-ctrl.door-active span { color: #90caf9; }
+    /* Open button — green */
+    #btn-door-open {
+      background: radial-gradient(circle at 38% 34%, #e8f5e9, #81c784 50%, #388e3c);
+      border-color: #2e7d32; color: #1b5e20;
+    }
+    #btn-door-open span { color: #2e7d32; }
+    /* Close button — amber */
+    #btn-door-close {
+      background: radial-gradient(circle at 38% 34%, #fff8e1, #ffca28 50%, #f57f17);
+      border-color: #e65100; color: #bf360c;
+    }
+    #btn-door-close span { color: #bf360c; }
+    /* Lit — pressed/active glow */
+    #btn-door-open.lit {
+      background: radial-gradient(circle at 38% 34%, #f1f8e9, #aed581 50%, #558b2f);
+      border-color: #8bc34a;
+      box-shadow: 0 0 20px rgba(76,175,80,.95), 3px 3px 10px rgba(0,0,0,.5);
+      color: #1b5e20;
+    }
+    #btn-door-close.lit {
+      background: radial-gradient(circle at 38% 34%, #fff3e0, #ffe082 50%, #ff8f00);
+      border-color: #ff6f00;
+      box-shadow: 0 0 20px rgba(255,143,0,.95), 3px 3px 10px rgba(0,0,0,.5);
+      color: #e65100;
+    }
+    /* Open button stays lit when doors are open */
+    #btn-door-open.door-active {
+      background: radial-gradient(circle at 38% 34%, #e3f2fd, #64b5f6 50%, #1565c0);
+      border-color: #42a5f5;
+      box-shadow: 0 0 20px rgba(66,165,245,.9), 3px 3px 10px rgba(0,0,0,.5);
+      color: #0d47a1;
+    }
 
     /* Auto-close countdown bar */
     #autoclose-bar {
@@ -649,19 +682,22 @@ function moveElevator(toFloor, done) {
   const toPos   = toFloor.position;
   const steps   = Math.abs(toPos - fromPos);
   const dur     = Math.max(900, steps * 380);
+  const dir     = toPos > fromPos ? 'up' : 'down';
 
-  speak(toPos > fromPos ? '往上' : '往下');
-  setArrow(toPos > fromPos ? 'up' : 'down');
-  rollDisplay(fromPos, toPos, dur);
-  $elevView.classList.add('moving');
+  // ── Audio first: play 往上/往下, THEN start animation ──
+  speak(dir === 'up' ? '往上' : '往下', () => {
+    setArrow(dir);
+    rollDisplay(fromPos, toPos, dur);
+    $elevView.classList.add('moving');
 
-  setTimeout(() => {
-    $elevView.classList.remove('moving');
-    curFloor = toFloor;
-    setArrow('none');
-    setOutsideScene(toFloor);
-    done?.();
-  }, dur);
+    setTimeout(() => {
+      $elevView.classList.remove('moving');
+      curFloor = toFloor;
+      setArrow('none');
+      setOutsideScene(toFloor);
+      done?.();
+    }, dur);
+  });
 }
 
 function rollDisplay(from, to, totalMs) {
@@ -690,17 +726,19 @@ function openDoors(cb) {
   clearTimeout(doorAutoTimer);
   clearInterval(acInterval);
   $acFill.style.width = '0%';
-
-  speak('升降機門開啟');
-  $doorFrame.classList.add('doors-open');
-  doorSt = 'opening';
   state  = S.DOOR_OPEN;
+  doorSt = 'opening';
+  updateDoorBtnState();
 
-  setTimeout(() => {
-    doorSt = 'open';
-    updateDoorBtnState();
-    cb?.();
-  }, 680);
+  // ── Audio first: announce, THEN slide doors open ──
+  speak('升降機門開啟', () => {
+    $doorFrame.classList.add('doors-open');
+    setTimeout(() => {
+      doorSt = 'open';
+      updateDoorBtnState();
+      cb?.();
+    }, 680);
+  });
 }
 
 function closeDoors(cb) {
@@ -709,17 +747,18 @@ function closeDoors(cb) {
   $acFill.style.width = '0%';
   waitingForClose = false;
   afterCloseFn    = null;
-
-  speak('升降機門關閉');
-  $doorFrame.classList.remove('doors-open');
   doorSt = 'closing';
   updateDoorBtnState();
 
-  setTimeout(() => {
-    doorSt = 'closed';
-    updateDoorBtnState();
-    cb?.();
-  }, 680);
+  // ── Audio first: announce, THEN slide doors closed ──
+  speak('升降機門關閉', () => {
+    $doorFrame.classList.remove('doors-open');
+    setTimeout(() => {
+      doorSt = 'closed';
+      updateDoorBtnState();
+      cb?.();
+    }, 680);
+  });
 }
 
 const AUTO_CLOSE_MS = 3000;
@@ -761,22 +800,29 @@ function updateDoorBtnState() {
 $btnDoorOpen.addEventListener('click', () => {
   if (state === S.MOVING || state === S.IDLE || state === S.ANNOUNCING) return;
 
+  // Flash highlight
+  $btnDoorOpen.classList.add('lit');
+
   if (doorSt === 'closed' || doorSt === 'closing') {
-    // (Re-)open and start 3-sec auto-close
+    // (Re-)open: audio first, then animate
     clearTimeout(doorAutoTimer);
     clearInterval(acInterval);
     $acFill.style.width = '0%';
-    speak('升降機門開啟');
-    $doorFrame.classList.add('doors-open');
     doorSt = 'opening';
-    setTimeout(() => {
-      doorSt = 'open';
-      updateDoorBtnState();
-      startAutoCloseCountdown();
-    }, 680);
+    updateDoorBtnState();
+    speak('升降機門開啟', () => {
+      $doorFrame.classList.add('doors-open');
+      setTimeout(() => {
+        doorSt = 'open';
+        $btnDoorOpen.classList.remove('lit');
+        updateDoorBtnState();
+        startAutoCloseCountdown();
+      }, 680);
+    });
   } else {
-    // Already open — restart the 3-sec countdown
+    // Already open — restart 3-sec countdown
     startAutoCloseCountdown();
+    setTimeout(() => $btnDoorOpen.classList.remove('lit'), 500);
   }
 });
 
@@ -785,7 +831,14 @@ $btnDoorOpen.addEventListener('click', () => {
 $btnDoorClose.addEventListener('click', () => {
   if (state === S.MOVING || state === S.IDLE || state === S.ANNOUNCING) return;
   if (doorSt === 'closed' || doorSt === 'closing') return;
-  closeDoors(waitingForClose ? afterCloseFn : null);
+
+  // Highlight stays until doors finish closing
+  $btnDoorClose.classList.add('lit');
+  const cb = waitingForClose ? afterCloseFn : null;
+  closeDoors(() => {
+    $btnDoorClose.classList.remove('lit');
+    cb?.();
+  });
 });
 
 /* ══════════════════════════════════════════
